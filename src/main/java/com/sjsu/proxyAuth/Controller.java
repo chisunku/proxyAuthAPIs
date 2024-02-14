@@ -5,6 +5,7 @@ import com.sjsu.proxyAuth.Service.LocationService;
 import com.sjsu.proxyAuth.model.Attendance;
 import com.sjsu.proxyAuth.model.Location;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -20,6 +21,10 @@ public class Controller {
 
     @Autowired
     AttendanceService attendanceService;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
 
     @GetMapping("/")
     public String test(){
@@ -43,6 +48,7 @@ public class Controller {
 
     @GetMapping("/getUserAttendance")
     public List<Attendance> getUserAttendance(@RequestParam String email){
+        System.out.println("in fetching attendance");
         return attendanceService.getUserAttendance(email);
     }
 
@@ -55,13 +61,21 @@ public class Controller {
         return map;
     }
 
-//    @PutMapping("/checkIn")
-//    public String checkIn(@RequestBody Attendance attendance){
-//        try{
-//            attendanceService.updateCheckinTime(attendance);
-//            return "updated successfully";
-//        }catch(Exception e){
-//            return "something went wrong!";
-//        }
-//    }
+    @GetMapping("/isUserInsideAnyOffice")
+    public Location isUserInsideAnyOffice(@RequestParam double latitude,
+                                         @RequestParam double longitude) {
+        PolygonChecker polygonChecker = new PolygonChecker();
+        List<Location> officeLocations = locationService.getAllLocations();
+        Location.Point userLoc = new Location.Point();
+        userLoc.setLatitude(latitude);
+        userLoc.setLongitude(longitude);
+        System.out.println("office locations: "+officeLocations.size());
+        for (Location office : officeLocations) {
+            if (office.getPolygon() != null && polygonChecker.isPointInsidePolygon(userLoc, office.getPolygon())) {
+                return office;  // User is inside at least one office location
+            }
+        }
+
+        return null;  // User is not inside any office location
+    }
 }
