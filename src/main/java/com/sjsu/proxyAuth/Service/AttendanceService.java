@@ -5,8 +5,11 @@ import com.sjsu.proxyAuth.model.Attendance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AttendanceService {
@@ -38,6 +41,22 @@ public class AttendanceService {
         else{
             attendanceRepo.save(att);
         }
+    }
+
+    public Attendance getLatestAttendance(String email) {
+        // Find the latest attendance record for the given email
+        return attendanceRepo.findFirstByEmailOrderByCheckInDateDesc(email);
+    }
+
+    public boolean isLatestRecordFromToday(String email) {
+        // Get the latest attendance record
+        Attendance latestAttendance = getLatestAttendance(email);
+
+        // Check if the latest record exists and is from today
+        return Optional.ofNullable(latestAttendance)
+                .map(attendance -> attendance.getCheckInDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                .filter(today -> today.isEqual(LocalDate.now()))
+                .isPresent();
     }
 
 }

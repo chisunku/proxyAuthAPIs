@@ -53,12 +53,32 @@ public class Controller {
     }
 
     @GetMapping("/getLatestRecord")
-    public HashMap<String, Date> getLatestRecord(@RequestParam String email){
-        Attendance attendance = attendanceService.getLatestAttendanceByEmail(email);
-        HashMap<String, Date> map = new HashMap<>();
-        map.put("Check In", attendance.getCheckInDate());
-        map.put("Check Out", attendance.getCheckOutDate());
-        return map;
+    public Attendance getLatestRecord(@RequestParam String email){
+        return attendanceService.getLatestAttendanceByEmail(email);
+    }
+
+    @PostMapping("/checkInUser")
+    public Attendance markAttendance(@RequestBody Attendance attendance){
+
+        attendanceService.saveAttendance(attendance);
+        return attendance;
+        //check if record is there
+//        Attendance rec = getLatestRecord(attendance.getEmail());
+//        if(attendanceService.isLatestRecordFromToday(attendance.getEmail())){
+//
+//        }
+//        else{
+//            attendanceService.saveAttendance(attendance);
+//            System.out.println("in checkin saving attendance "+attendance.getEmail());
+//        }
+//        return attendance;
+        //update
+        //save
+    }
+
+    @PutMapping("/checkout")
+    public void checkOut(@RequestBody Attendance attendance){
+        attendanceService.saveAttendance(attendance);
     }
 
     @GetMapping("/isUserInsideAnyOffice")
