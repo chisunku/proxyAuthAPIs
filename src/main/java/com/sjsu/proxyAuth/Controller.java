@@ -38,11 +38,11 @@ public class Controller {
     }
 
     @GetMapping("/emailAuth")
-    public Boolean emailAuth(@RequestParam String email, @RequestParam String password){
+    public Boolean emailAuth(@RequestParam String email, @RequestParam String password, @RequestParam String userId){
         try{
             Employee employee = employeeService.getByEmail(email);
-            System.out.println("Email suth : "+email+" "+password);
-            if(employee.getPassword().equals(password)) {
+            System.out.println("Email auth : "+email+" "+password+" "+userId+" "+employee.getUserId());
+            if(employee.getUserId().equals(userId) && employee.getPassword().equals(password)) {
                 System.out.println("email verified!");
                 return true;
             }
@@ -113,6 +113,7 @@ public class Controller {
         System.out.println("office locations: "+officeLocations.size());
         for (Location office : officeLocations) {
             if (office.getPolygon() != null && polygonChecker.isPointInsidePolygon(userLoc, office.getPolygon())) {
+                System.out.println("found office: "+office.getName());
                 return office;  // User is inside at least one office location
             }
         }

@@ -16,4 +16,6 @@ public class Employee {
     Face face;
     @Getter@Setter
     String password;
+    @Getter@Setter
+    String userId;
 }
