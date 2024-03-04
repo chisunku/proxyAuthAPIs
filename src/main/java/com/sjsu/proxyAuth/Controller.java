@@ -1,9 +1,12 @@
 package com.sjsu.proxyAuth;
 
 import com.sjsu.proxyAuth.Service.AttendanceService;
+import com.sjsu.proxyAuth.Service.EmployeeService;
 import com.sjsu.proxyAuth.Service.LocationService;
 import com.sjsu.proxyAuth.model.Attendance;
+import com.sjsu.proxyAuth.model.Employee;
 import com.sjsu.proxyAuth.model.Location;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,9 @@ public class Controller {
 
     @Autowired
     AttendanceService attendanceService;
+
+    @Autowired
+    EmployeeService employeeService;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -97,5 +103,25 @@ public class Controller {
         }
 
         return null;  // User is not inside any office location
+    }
+
+    @PostMapping("/registerEmp")
+    public Employee registerEmp(@RequestBody Employee employee){
+        if(employee == null)
+            System.out.println("yes!");
+        System.out.println("in register employee: "+ employee.getName());
+        try {
+            employeeService.saveEmployee(employee);
+            return employee;
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+    @GetMapping("/getEmployeeByEmail")
+    public Employee getEmployeeByEmail(@RequestParam String email){
+        Employee emp = employeeService.getByEmail(email);
+        System.out.println("in get emp : "+emp.getName());
+        return emp;
     }
 }
