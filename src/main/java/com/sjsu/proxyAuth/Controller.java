@@ -37,6 +37,21 @@ public class Controller {
         return "Connected..";
     }
 
+    @GetMapping("/emailAuth")
+    public Boolean emailAuth(@RequestParam String email, @RequestParam String password){
+        try{
+            Employee employee = employeeService.getByEmail(email);
+            System.out.println("Email suth : "+email+" "+password);
+            if(employee.getPassword().equals(password)) {
+                System.out.println("email verified!");
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @PostMapping("/addLocation")
     public String addLocation(@RequestBody Location location){
         try {

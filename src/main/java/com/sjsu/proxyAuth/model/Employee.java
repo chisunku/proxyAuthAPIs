@@ -14,4 +14,6 @@ public class Employee {
     Location location;
     @Getter@Setter
     Face face;
+    @Getter@Setter
+    String password;
 }
