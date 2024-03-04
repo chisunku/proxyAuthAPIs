@@ -6,6 +6,8 @@ import com.sjsu.proxyAuth.model.Leaves;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class LeaveManagementController {
     @Autowired
@@ -29,6 +31,27 @@ public class LeaveManagementController {
     @PutMapping("/leave")
     public void updateLeave(@RequestBody  Leaves leave) throws Exception {
         leaveManagementService.updateLeave(leave);
+    }
+
+
+    /**
+     *This API is for getting all leave requests
+     * @param employeeId
+     * @return
+     */
+    @GetMapping("/leave/{employeeId}/")
+    public List<Leaves> getAllLeavesforEmployee(@PathVariable String employeeId) {
+        return leaveManagementService.getAllLeavesforEmployee(employeeId);
+    }
+
+    /**
+     *This API is for getting all leave requests per status
+     * @param employeeEmail
+     * @return
+     */
+    @GetMapping("/leave/{employeeEmail}/{status}")
+    public List<Leaves> getAllLeavesforEmployeebyStatus(@PathVariable String employeeEmail, @PathVariable String status) {
+        return leaveManagementService.getAllLeavesforEmployeeByStatus(employeeEmail,status);
     }
 
 }

@@ -9,4 +9,10 @@ public interface LeavesRepo extends MongoRepository<Leaves, ObjectId> {
 
     List<Leaves> findByApprovalStatus(String status);
 
+    List<Leaves> findByEmail(String email);
+
+    List<Leaves> findByEmailAndApprovalStatus(String email, String status);
+
+
+
 }
