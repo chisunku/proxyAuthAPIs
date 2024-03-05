@@ -38,18 +38,30 @@ public class Controller {
     }
 
     @GetMapping("/emailAuth")
-    public Boolean emailAuth(@RequestParam String email, @RequestParam String password, @RequestParam String userId){
+    public Employee emailAuth(@RequestParam String email, @RequestParam String password, @RequestParam String userId){
         try{
             Employee employee = employeeService.getByEmail(email);
             System.out.println("Email auth : "+email+" "+password+" "+userId+" "+employee.getUserId());
             if(employee.getUserId().equals(userId) && employee.getPassword().equals(password)) {
-                System.out.println("email verified!");
-                return true;
+                System.out.println("email verified! "+employee.getName());
+                return employee;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+        return null;
+    }
+
+    @GetMapping("/userIdAuth")
+    public Employee userIdAuth(@RequestParam String userId){
+        try{
+            Employee employee = employeeService.getByUserId(userId);
+            System.out.println("biometric auth : "+userId+" "+employee.getUserId());
+            return employee;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @PostMapping("/addLocation")

@@ -30,4 +30,8 @@ public class EmployeeService {
         return employeeRepo.findByEmail(email);
     }
 
+    public Employee getByUserId(String userId){
+        return employeeRepo.findByUserId(userId);
+    }
+
 }

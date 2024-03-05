@@ -18,4 +18,6 @@ public class Employee {
     String password;
     @Getter@Setter
     String userId;
+    @Getter@Setter
+    String designation;
 }
