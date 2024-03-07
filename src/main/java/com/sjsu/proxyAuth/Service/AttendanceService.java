@@ -24,8 +24,10 @@ public class AttendanceService {
         attendanceRepo.save(attendance);
     }
 
+    public void findById(String id){ attendanceRepo.findById(id);}
+
     public List<Attendance> getUserAttendance(String email) {
-        return attendanceRepo.findByEmail(email);
+        return attendanceRepo.findByEmailOrderByCheckInDateDesc(email);
     }
 
     public Attendance getLatestAttendanceByEmail(String email) {

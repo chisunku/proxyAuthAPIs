@@ -87,7 +87,16 @@ public class Controller {
 
     @GetMapping("/getLatestRecord")
     public Attendance getLatestRecord(@RequestParam String email){
-        return attendanceService.getLatestAttendanceByEmail(email);
+        Date today = new Date();
+        System.out.println("today : "+today);
+        Attendance attendance = attendanceService.getLatestAttendanceByEmail(email);
+        String checkin = attendance.getCheckInDate().getDate()+":"+attendance.getCheckInDate().getMonth()+":"+attendance.getCheckInDate().getYear();
+        String todayDate = today.getDate()+":"+today.getMonth()+":"+today.getYear();
+        if(checkin.equals(todayDate)){
+            System.out.println("yes the dates match!!");
+            return attendance;
+        }
+        return null;
     }
 
     @PostMapping("/checkInUser")
@@ -109,9 +118,14 @@ public class Controller {
         //save
     }
 
-    @PutMapping("/checkout")
-    public void checkOut(@RequestBody Attendance attendance){
-        attendanceService.saveAttendance(attendance);
+    @PostMapping("/checkout")
+    public Attendance checkOut(@RequestBody Attendance attendance){
+        //fetch by id -> set -> save
+        Attendance checkin = attendanceService.getLatestAttendanceByEmail(attendance.getEmail());
+        System.out.println("ID : "+checkin.getId());
+        checkin.setCheckOutDate(attendance.getCheckOutDate());
+        attendanceService.saveAttendance(checkin);
+        return checkin;
     }
 
     @GetMapping("/isUserInsideAnyOffice")

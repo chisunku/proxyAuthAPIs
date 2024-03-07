@@ -3,6 +3,7 @@ package com.sjsu.proxyAuth.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,6 +12,8 @@ import java.util.Date;
 
 @Document(collection = "Attendance")
 public class Attendance {
+    @Id@Getter@Setter
+    private String id;
     @Getter@Setter
     String email;
     @Getter@Setter
