@@ -1,9 +1,7 @@
 package com.sjsu.proxyAuth.Service;
 
 import com.sjsu.proxyAuth.Repository.EmployeeRepo;
-import com.sjsu.proxyAuth.Repository.LocationRepo;
 import com.sjsu.proxyAuth.model.Employee;
-import com.sjsu.proxyAuth.model.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

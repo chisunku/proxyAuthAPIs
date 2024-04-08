@@ -13,11 +13,15 @@ public class Employee {
     @Getter@Setter
     Location location;
     @Getter@Setter
-    Face face;
+    FaceModel face;
     @Getter@Setter
     String password;
     @Getter@Setter
     String userId;
     @Getter@Setter
     String designation;
+    @Getter@Setter
+    String address;
+    @Getter@Setter
+    String imageURL;
 }

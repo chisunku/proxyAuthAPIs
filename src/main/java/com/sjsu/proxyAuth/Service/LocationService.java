@@ -23,4 +23,8 @@ public class LocationService {
         return locationRepository.findAll();
     }
 
+    public void deleteLocation(String id) {
+        locationRepository.deleteById(id);
+    }
+
 }

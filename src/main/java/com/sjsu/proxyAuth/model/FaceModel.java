@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Face")
-public class Face {
+@Document(collection = "FaceModel")
+public class FaceModel {
     @Getter@Setter
     String name;
     @Getter@Setter

@@ -50,15 +50,15 @@ public class AttendanceService {
         return attendanceRepo.findFirstByEmailOrderByCheckInDateDesc(email);
     }
 
-    public boolean isLatestRecordFromToday(String email) {
-        // Get the latest attendance record
-        Attendance latestAttendance = getLatestAttendance(email);
-
-        // Check if the latest record exists and is from today
-        return Optional.ofNullable(latestAttendance)
-                .map(attendance -> attendance.getCheckInDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                .filter(today -> today.isEqual(LocalDate.now()))
-                .isPresent();
-    }
+//    public boolean isLatestRecordFromToday(String email) {
+//        // Get the latest attendance record
+//        Attendance latestAttendance = getLatestAttendance(email);
+//
+//        // Check if the latest record exists and is from today
+//        return Optional.ofNullable(latestAttendance)
+//                .map(attendance -> attendance.getCheckInDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+//                .filter(today -> today.isEqual(LocalDate.now()))
+//                .isPresent();
+//    }
 
 }
