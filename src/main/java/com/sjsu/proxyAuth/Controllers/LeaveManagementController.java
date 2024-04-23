@@ -74,13 +74,20 @@ public class LeaveManagementController {
     @GetMapping("/getUpcomingLeave")
     public List<Leaves> getUpcomingLeave(@RequestParam String employeeEmail, @RequestParam Date startDate) {
         List<Leaves> leaves = leaveManagementService.getUpcomingLeave(employeeEmail, startDate);
-        System.out.println("past leaves :"+leaves.size());
+        System.out.println("Upcoming leaves :"+leaves.size());
         return leaves;
     }
 
     @GetMapping("/getLeavesStatusCount")
     public List<Leaves> getLeavesStatusCount(@RequestParam String employeeEmail){
         List<Leaves> leaves = leaveManagementService.findLeavesByEmail(employeeEmail);
+        System.out.println("leaves : "+leaves);
+        return leaves;
+    }
+
+    @GetMapping("/getLeavesByFilter")
+    public List<Leaves> getLeavesByFilter(@RequestParam String employeeEmail, @RequestParam String status){
+        List<Leaves> leaves = leaveManagementService.getAllLeavesforEmployeeByStatus(employeeEmail, status);
         System.out.println("leaves : "+leaves);
         return leaves;
     }

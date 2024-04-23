@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +22,11 @@ public class AdminLeaveManagementService {
      * This method approve a leave for employee
      * @param id
      */
-    public void approveLeave(String id) {
+    public void approveLeave(String id, String approvedBy) {
         Optional<Leaves> leavesOptional = leavesRepo.findById(new ObjectId(id));
         leavesOptional.ifPresentOrElse(leaves -> {
                     leaves.setApprovalStatus("Approved");
+                    leaves.setApprovalManager(approvedBy);
                     leavesRepo.save(leaves);
                 },
                 () -> {
@@ -57,10 +59,12 @@ public class AdminLeaveManagementService {
      * his method reject a leave for employee
      * @param id
      */
-    public void rejectLeave(String id) {
+    public void rejectLeave(String id, String rejectReason, String approvedBy) {
         Optional<Leaves> leavesOptional = leavesRepo.findById(new ObjectId(id));
         leavesOptional.ifPresentOrElse(leaves -> {
-                    leaves.setApprovalStatus("Reject");
+                    leaves.setApprovalStatus("Rejected");
+                    leaves.setRejectReason(rejectReason);
+                    leaves.setApprovalManager(approvedBy);
                     leavesRepo.save(leaves);
                 },
                 () -> {
@@ -69,4 +73,13 @@ public class AdminLeaveManagementService {
                 }
         );
     }
+
+    public List<Leaves> getNotApprovedLeaves(Date date){
+        return leavesRepo.findByApprovalStatusAndStartDate("Pending", date);
+    }
+
+    public List<Leaves> getAllLeavesAfterStartDate(Date date){
+        return leavesRepo.findByStartDate(date);
+    }
+
 }

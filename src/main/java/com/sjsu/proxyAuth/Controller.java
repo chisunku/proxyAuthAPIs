@@ -49,6 +49,21 @@ public class Controller {
         return "Connected..";
     }
 
+    @GetMapping("/adminEmail")
+    public Employee adminEmail(@RequestParam String email, @RequestParam String password){
+        try{
+            Employee employee = employeeService.getByEmail(email);
+            if(employee.getPassword().equals(password)) {
+                System.out.println("admin email : " + email + " " + employee.getName());
+                return employee;
+            }
+            return null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @GetMapping("/emailAuth")
     public Employee emailAuth(@RequestParam String email, @RequestParam String password, @RequestParam String userId){
         try{
@@ -184,10 +199,20 @@ public class Controller {
     public Employee registerEmployee(@RequestBody Employee employee) {
         System.out.println("Registering user : "+employee.getName()+" "+employee.getImageURL());
         try{
-            System.out.println("employee registration");
-            employeeService.saveEmployee(employee);
-            System.out.println("emp registered!!");
-            return employee;
+            //find the emp
+            Employee emp = employeeService.getByEmail(employee.getEmail());
+            //if not there then tell invalid emp, reach out to admin
+            if(emp==null){
+                return null;
+            }
+            else{
+                emp.setFace(employee.getFace());
+                emp.setImageURL(employee.getImageURL());
+                emp.setPassword(employee.getPassword());
+                emp.setUserId(employee.getUserId());
+                employeeService.saveEmployee(emp);
+                return emp;
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -223,5 +248,21 @@ public class Controller {
         }catch(Exception e){
             return "something went wrong..";
         }
+    }
+
+    @GetMapping("/getAllEmployees")
+    public List<Employee> getAllEmployees(){
+        List<Employee> employees = employeeService.getAllEmployees();
+        return employees;
+    }
+
+    @PostMapping("/addEmployees")
+    public String addEmployees(@RequestParam MultipartFile file) {
+        //read from file and save employees
+        if (file.isEmpty()) {
+            return "Please select a file to upload";
+        }
+        employeeService.saveEmployeesFromCSV(file);
+        return "File uploaded successfully";
     }
 }

@@ -71,6 +71,7 @@ public class LeaveManagementService {
 
     public List<Leaves> getAllLeavesforEmployeeByStatus(String employeeEmail, String approvalStatus) {
         List<Leaves> leavesList = leavesRepo.findByEmailAndApprovalStatus(employeeEmail,approvalStatus);
+        System.out.println("leaves for status : "+leavesList.size()+" "+approvalStatus);
         return leavesList;
     }
 
@@ -80,7 +81,8 @@ public class LeaveManagementService {
     }
 
     public List<Leaves> getUpcomingLeave(String employeeEmail, Date startDate) {
-        List<Leaves> leavesList = leavesRepo.findByEmailAndStartDateAfter(employeeEmail,startDate);
+        //same or after startDate
+        List<Leaves> leavesList = leavesRepo.findByEmailAndGreaterThanEqualStartDate(employeeEmail,startDate);
         return leavesList;
     }
 
@@ -91,13 +93,6 @@ public class LeaveManagementService {
     }
 
     public List<Leaves> findLeavesByEmail(String email) {
-
-        List<Leaves> leaves = mongoTemplate.findAll(Leaves.class, "Leaves");
-
-        for (Leaves leave : leaves) {
-            System.out.println("Approval status: " + leave.getApprovalStatus());
-        }
-
         MatchOperation match = Aggregation.match(Criteria.where("email").is(email));
         GroupOperation group = Aggregation.group("approvalStatus").count().as("count");
         ProjectionOperation project = Aggregation.project( "_id", "count").and("_id").as("approvalStatus");

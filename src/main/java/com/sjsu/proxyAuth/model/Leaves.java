@@ -24,4 +24,5 @@ public class Leaves {
     private String approvalManager;
     private String approvalStatus = "Pending";
     private int count;
+    private String rejectReason;
 }

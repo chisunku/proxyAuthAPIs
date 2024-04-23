@@ -10,19 +10,28 @@ import java.util.Map;
 
 public interface LeavesRepo extends MongoRepository<Leaves, ObjectId> {
 
+
     List<Leaves> findByApprovalStatus(String status);
+
+    @Query("{'approvalStatus':?0, 'startDate':{ $gte: ?1 }}")
+    List<Leaves> findByApprovalStatusAndStartDate(String status, Date startDate);
 
     List<Leaves> findByEmail(String email);
 
     List<Leaves> findByEmailAndApprovalStatus(String email, String status);
 
+    @Query("{'email': ?0, 'endDate': { $lte: ?1 }}")
     //find past leaves
     List<Leaves> findByEmailAndEndDateBefore(String email, Date endDate);
 
-    List<Leaves> findByEmailAndStartDateAfter(String email, Date startDate);
+    @Query("{'email': ?0, 'startDate': { $gte: ?1 }}")
+    List<Leaves> findByEmailAndGreaterThanEqualStartDate(String email, Date startDate);
 
     //get leaves by email and group leaves by status along with count.
     @Query("{$group: {_id: '$status', count: {$sum: 1}, leaves: {$push: '$$ROOT'}}}")
     List<Map<String, Object>> findByEmailAndGroupByStatus(String email);
+
+    @Query("{'startDate': { $gte: ?0 }}")
+    List<Leaves> findByStartDate(Date startDate);
 
 }

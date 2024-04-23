@@ -4,11 +4,9 @@ import com.sjsu.proxyAuth.Service.AdminLeaveManagementService;
 import com.sjsu.proxyAuth.Service.LeaveManagementService;
 import com.sjsu.proxyAuth.model.Leaves;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -23,8 +21,13 @@ public class AdminLeaveManagementController {
      * @throws Exception
      */
     @PostMapping("/leave/approve/{id}")
-    public void approveLeave(@PathVariable String id) throws Exception {
-        adminLeaveManagementService.approveLeave(id);
+    public String approveLeave(@PathVariable String id, @RequestParam String approvedBy) throws Exception {
+        try {
+            adminLeaveManagementService.approveLeave(id, approvedBy);
+            return "success";
+        } catch (Exception e) {
+            return "error";
+        }
     }
 
     /**
@@ -33,8 +36,13 @@ public class AdminLeaveManagementController {
      * @throws Exception
      */
     @PostMapping("/leave/reject/{id}")
-    public void rejectLeave(@PathVariable String id) throws Exception {
-        adminLeaveManagementService.rejectLeave(id);
+    public String rejectLeave(@PathVariable String id, @RequestParam String rejectReason, @RequestParam String approvedBy) throws Exception {
+        try{
+            adminLeaveManagementService.rejectLeave(id, rejectReason, approvedBy);
+            return "success";
+        } catch (Exception e) {
+            return "error";
+        }
     }
 
     /**
@@ -54,5 +62,17 @@ public class AdminLeaveManagementController {
     @GetMapping("/leave")
     public List<Leaves> getAllLeaves() {
         return adminLeaveManagementService.getAllLeaves();
+    }
+
+    @GetMapping("/leave/notApproved")
+    public List<Leaves> getNotApprovedLeaves(@RequestParam Date startDate) {
+        return adminLeaveManagementService.getNotApprovedLeaves(startDate);
+    }
+
+    @GetMapping("/leave/getAllAfterStartDate")
+    public List<Leaves> getAllLeavesAfterStartDate(@RequestParam Date startDate) {
+        List<Leaves> leaves = adminLeaveManagementService.getAllLeavesAfterStartDate(startDate);
+        System.out.println("Leaves after start date :"+leaves.size()+" start date : "+startDate);
+        return leaves;
     }
 }
