@@ -257,7 +257,7 @@ public class Controller {
     }
 
     @PostMapping("/addEmployees")
-    public String addEmployees(@RequestParam MultipartFile file) {
+    public String addEmployees(@RequestParam MultipartFile file, @RequestParam String name) {
         //read from file and save employees
         if (file.isEmpty()) {
             return "Please select a file to upload";

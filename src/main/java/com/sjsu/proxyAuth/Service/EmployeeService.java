@@ -54,9 +54,11 @@ public class EmployeeService {
                     continue;
                 }
                 String[] data = line.split(",");
-                Location location = locationService.getLocation(data[2]);
-                Employee employee = new Employee(data[0], data[1], location, data[3], data[4], data[5]);
-                employeeRepo.save(employee);
+                if(data.length == 6) {
+                    Location location = locationService.getLocation(data[2]);
+                    Employee employee = new Employee(data[0], data[1], location, data[3], data[4], data[5]);
+                    employeeRepo.save(employee);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
