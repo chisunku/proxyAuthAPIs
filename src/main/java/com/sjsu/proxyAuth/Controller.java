@@ -155,22 +155,27 @@ public class Controller {
     }
 
     @GetMapping("/isUserInsideAnyOffice")
-    public Location isUserInsideAnyOffice(@RequestParam double latitude,
-                                          @RequestParam double longitude) {
+    public ResponseEntity<Location> isUserInsideAnyOffice(@RequestParam double latitude,
+                                          @RequestParam double longitude,
+                                          @RequestParam String email) {
+        System.out.println("calling the API : "+email);
         PolygonChecker polygonChecker = new PolygonChecker();
+        Employee employee = employeeService.getByEmail(email);
         List<Location> officeLocations = locationService.getAllLocations();
+//        Location location = employee.getLocation();
         Location.Point userLoc = new Location.Point();
         userLoc.setLatitude(latitude);
         userLoc.setLongitude(longitude);
-        System.out.println("office locations: "+ officeLocations.size());
-        for (Location office : officeLocations) {
-            if (office.getPolygon() != null && polygonChecker.isPointInsidePolygon(userLoc, office.getPolygon())) {
-                System.out.println("found office: "+office.getName());
-                return office;  // User is inside at least one office location
+        for (Location location : officeLocations) {
+            if (location.getPolygon() != null && polygonChecker.isPointInsidePolygon(userLoc, location.getPolygon())) {
+                System.out.println("found office: " + location.getName());
+                return ResponseEntity.ok(location);  // User is inside at least one office location
             }
+//            else
+//                return null;
         }
 
-        return null;  // User is not inside any office location
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // User is not inside any office location
     }
 
     @PostMapping("/registerEmp")
@@ -265,4 +270,16 @@ public class Controller {
         employeeService.saveEmployeesFromCSV(file);
         return "File uploaded successfully";
     }
+
+    @PostMapping("/updateUserLocation")
+    public String updateUserLocation(@RequestParam String email, @RequestParam double latitude, @RequestParam double longitude){
+        System.out.println("updating location : "+email+" "+latitude+" "+longitude);
+        Employee employee = employeeService.getByEmail(email);
+        employee.setLatitude(latitude);
+        employee.setLongitude(longitude);
+        employeeService.saveEmployee(employee);
+        return "Location updated";
+    }
+
+
 }

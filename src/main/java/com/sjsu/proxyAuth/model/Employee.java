@@ -30,6 +30,10 @@ public class Employee {
     String imageURL;
     @Getter@Setter
     String contactNo;
+    @Getter@Setter
+    double latitude;
+    @Getter@Setter
+    double longitude;
 
     public Employee(String name, String email, Location location, String designation, String address, String contactNo) {
         this.name = name;
