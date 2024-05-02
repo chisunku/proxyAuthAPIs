@@ -179,15 +179,18 @@ public class Controller {
     }
 
     @PostMapping("/registerEmp")
-    public Employee registerEmp(@RequestBody Employee employee){
+    public ResponseEntity<Employee> registerEmp(@RequestBody Employee employee){
         if(employee == null)
             System.out.println("yes!");
         System.out.println("in register employee: "+ employee.getName());
         try {
+            if(employeeService.getByEmail(employee.getEmail()) != null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
             employeeService.saveEmployee(employee);
-            return employee;
+            return ResponseEntity.ok(employee);
         }catch(Exception e){
-            return null;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
@@ -201,14 +204,15 @@ public class Controller {
     }
 
     @PostMapping("/registerEmployee")
-    public Employee registerEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Employee> registerEmployee(@RequestBody Employee employee) {
         System.out.println("Registering user : "+employee.getName()+" "+employee.getImageURL());
         try{
             //find the emp
             Employee emp = employeeService.getByEmail(employee.getEmail());
+            System.out.println("employee image url : "+emp.getImageURL());
             //if not there then tell invalid emp, reach out to admin
-            if(emp==null){
-                return null;
+            if(emp.getImageURL()!=null || emp==null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
             else{
                 emp.setFace(employee.getFace());
@@ -216,12 +220,12 @@ public class Controller {
                 emp.setPassword(employee.getPassword());
                 emp.setUserId(employee.getUserId());
                 employeeService.saveEmployee(emp);
-                return emp;
+                return ResponseEntity.ok(employee);
             }
         }catch(Exception e){
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return null;
     }
 
     @PostMapping("/putImageToBucket")

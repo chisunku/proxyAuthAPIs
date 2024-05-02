@@ -6,4 +6,5 @@ WORKDIR /usr/app
 
 RUN sh -c 'touch proxyAuth-0.0.1-SNAPSHOT.jar'
 
-ENTRYPOINT ["java","-jar","proxyAuth-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","
+-jar","proxyAuth-0.0.1-SNAPSHOT.jar"]

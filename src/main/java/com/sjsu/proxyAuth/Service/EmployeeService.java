@@ -56,6 +56,9 @@ public class EmployeeService {
                 String[] data = line.split(",");
                 if(data.length == 6) {
                     Location location = locationService.getLocation(data[2]);
+                    if(getByEmail(data[1]) != null){
+                        continue;
+                    }
                     Employee employee = new Employee(data[0], data[1], location, data[3], data[4], data[5]);
                     employeeRepo.save(employee);
                 }
